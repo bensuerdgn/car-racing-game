@@ -127,19 +127,20 @@ public class Surface extends JPanel implements ActionListener, KeyListener {
     private void drawGameOver(Graphics g) {
 
         timer.stop();
-        setBackground(Color.DARK_GRAY);
+        g.drawImage(roadImage, 0, 0, 600, 1000, this);
+        g.drawImage(roadImage2, WIDTH / 2 - 8, 0, 15, HEIGHT, this);
         String message = "GAME OVER ";
         String message2 = "SKOR : " + skor / 1000;
-        String message3 = " GEÇEN SÜRE : " + (int) time / 1000.0;
+        String message3 = "TIME : " + (int) time / 100.0;
 
         Font small = new Font("Helvetica", Font.BOLD, 50);
         FontMetrics fm = getFontMetrics(small);
 
         g.setColor(Color.white);
         g.setFont(small);
-        g.drawString(message, this.WIDTH / 2 - 150, this.HEIGHT / 2 - 100);
-        g.drawString(message2, this.WIDTH / 2 - 120, this.HEIGHT / 2);
-        g.drawString(message3, this.WIDTH / 2 - 270, this.HEIGHT / 2 + 100);
+        g.drawString(message, this.WIDTH / 2 - 155, this.HEIGHT / 2 - 100);
+        g.drawString(message2, this.WIDTH / 2 - 140, this.HEIGHT / 2);
+        g.drawString(message3, this.WIDTH / 2 - 140, this.HEIGHT / 2 + 100);
 
         //  System.exit(5000);
     }
