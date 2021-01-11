@@ -26,8 +26,8 @@ public class Variable {
     public Variable(int x, int y) {
         this.x = x;
         this.y = y;
-        this.width = 80;
-        this.height = 70;
+        this.width = 60;
+        this.height = 100;
         this.WIDTH = 600;
         this.HEIGHT = 1000;
     }

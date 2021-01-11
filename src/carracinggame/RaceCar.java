@@ -23,7 +23,7 @@ public class RaceCar extends Variable {
     }
 
     public void initRaceCar() {
-        loadImage("C:\\Users\\hp\\Desktop\\araba.jpg");
+        loadImage("C:\\Users\\hp\\Desktop\\red-car.png");
         getImageDimensions();
     }
 

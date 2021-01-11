@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -12,9 +13,17 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
+import javax.imageio.stream.FileImageInputStream;
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.Timer;
@@ -38,6 +47,8 @@ public class Surface extends JPanel implements ActionListener, KeyListener {
     private int time;
     private int racecarX = this.WIDTH / 2 - 120;
     private Random rand;
+    private BufferedImage roadImage;
+    private BufferedImage roadImage2;
 
     public Surface() {
         initSurface();
@@ -53,6 +64,13 @@ public class Surface extends JPanel implements ActionListener, KeyListener {
         rand = new Random();
         timer = new Timer(20, this);
         timer.start();
+        try {
+            roadImage = ImageIO.read(new FileImageInputStream(new File("C:\\Users\\hp\\Desktop\\road.jpg")));
+            roadImage2 = ImageIO.read(new FileImageInputStream(new File("C:\\Users\\hp\\Desktop\\road2.jpg")));
+
+        } catch (IOException ex) {
+            Logger.getLogger(Surface.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
         addKeyListener(this);
 
@@ -90,30 +108,40 @@ public class Surface extends JPanel implements ActionListener, KeyListener {
         time += 5;
         skor += time;
 
-        g2d.setColor(Color.GRAY);
-        g2d.fillRect(WIDTH / 2 - 150, 0, 300, HEIGHT);
+        g2d.drawImage(roadImage, 0, 0, 600, 1000, this);
+        g2d.drawImage(roadImage2, WIDTH / 2 - 8, 0, 15, HEIGHT, this);
 
         g2d.setColor(Color.white);
         for (Rectangle line : line) {
             g2d.fillRect(line.x, line.y, line.width, line.height);
         }
 
-        g2d.drawImage(raceCar.getImage(), raceCar.x, this.HEIGHT - 210, raceCar.width, raceCar.height, this);
+        g2d.drawImage(raceCar.getImage(), raceCar.x, this.HEIGHT - 205, raceCar.width, raceCar.height, this);
 
         for (OtherCars oc : otherCars) {
             g2d.drawImage(oc.getImage(), oc.x, oc.y, oc.width, oc.height, this);
         }
+
     }
 
     private void drawGameOver(Graphics g) {
-        Graphics2D g2d = (Graphics2D) g;
-        
-        timer.stop();
-        String message = "skor : " + skor / 1000 + "\n"
-                + " geçen süre : " + time / 1000.0;
-        JOptionPane.showMessageDialog(this, message);
-        System.exit(0);
 
+        timer.stop();
+        setBackground(Color.DARK_GRAY);
+        String message = "GAME OVER ";
+        String message2 = "SKOR : " + skor / 1000;
+        String message3 = " GEÇEN SÜRE : " + (int) time / 1000.0;
+
+        Font small = new Font("Helvetica", Font.BOLD, 50);
+        FontMetrics fm = getFontMetrics(small);
+
+        g.setColor(Color.white);
+        g.setFont(small);
+        g.drawString(message, this.WIDTH / 2 - 150, this.HEIGHT / 2 - 100);
+        g.drawString(message2, this.WIDTH / 2 - 120, this.HEIGHT / 2);
+        g.drawString(message3, this.WIDTH / 2 - 270, this.HEIGHT / 2 + 100);
+
+        //  System.exit(5000);
     }
 
     public void addOtherCars(boolean first) {
@@ -123,7 +151,7 @@ public class Surface extends JPanel implements ActionListener, KeyListener {
         if (positionx == 0) {
             x = WIDTH / 2 - 120;
         } else {
-            x = WIDTH / 2 + 40;
+            x = WIDTH / 2 + 60;
         }
         if (first) {
             otherCars.add(new OtherCars(x, y - 100 - (otherCars.size() * space)));
@@ -203,7 +231,7 @@ public class Surface extends JPanel implements ActionListener, KeyListener {
     }
 
     public void moveright() {
-        if (raceCar.x + move > WIDTH / 2 + 60) {
+        if (raceCar.x + move > WIDTH / 2 + 80) {
             System.out.println("\b");
         } else {
             raceCar.x += move;

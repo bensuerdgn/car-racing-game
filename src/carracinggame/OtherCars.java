@@ -25,7 +25,7 @@ public class OtherCars extends Variable {
     }
 
     public void initOtherCars() {
-        loadImage("C:\\Users\\hp\\Desktop\\4.jpg");
+        loadImage("C:\\Users\\hp\\Desktop\\black-car.png");
         getImageDimensions();
     }
 
