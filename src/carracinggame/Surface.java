@@ -35,9 +35,9 @@ import javax.swing.Timer;
 public class Surface extends JPanel implements ActionListener, KeyListener {
 
     private Timer timer;
-    private RaceCar raceCar;
-    private ArrayList<OtherCars> otherCars;
-    private ArrayList<Rectangle> line;
+    private RaceCar raceCar; //kırmızı araba
+    private ArrayList<OtherCars> otherCars; //karşıdan gelen diğer arabalar
+    private ArrayList<Rectangle> line; //yol çizgileri
     private int WIDTH = 600;
     private int HEIGHT = 1000;
     private int space = 300;
@@ -56,18 +56,16 @@ public class Surface extends JPanel implements ActionListener, KeyListener {
 
     public void initSurface() {
 
-        setBackground(Color.green);
-
         raceCar = new RaceCar(racecarX, this.HEIGHT - 200);
         otherCars = new ArrayList<>();
         line = new ArrayList<Rectangle>();
         rand = new Random();
         timer = new Timer(20, this);
         timer.start();
+
         try {
             roadImage = ImageIO.read(new FileImageInputStream(new File("C:\\Users\\hp\\Desktop\\road.jpg")));
             roadImage2 = ImageIO.read(new FileImageInputStream(new File("C:\\Users\\hp\\Desktop\\road2.jpg")));
-
         } catch (IOException ex) {
             Logger.getLogger(Surface.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -103,21 +101,26 @@ public class Surface extends JPanel implements ActionListener, KeyListener {
     }
 
     private void drawObjects(Graphics g) {
+
+        //oyun ekranı
         Graphics2D g2d = (Graphics2D) g;
 
-        time += 5;
+        time += 4;
         skor += time;
 
         g2d.drawImage(roadImage, 0, 0, 600, 1000, this);
         g2d.drawImage(roadImage2, WIDTH / 2 - 8, 0, 15, HEIGHT, this);
 
+        //yol çizgileri
         g2d.setColor(Color.white);
         for (Rectangle line : line) {
             g2d.fillRect(line.x, line.y, line.width, line.height);
         }
 
+        //kırmızı araba
         g2d.drawImage(raceCar.getImage(), raceCar.x, this.HEIGHT - 205, raceCar.width, raceCar.height, this);
 
+        //siyah arabalar
         for (OtherCars oc : otherCars) {
             g2d.drawImage(oc.getImage(), oc.x, oc.y, oc.width, oc.height, this);
         }
@@ -126,9 +129,12 @@ public class Surface extends JPanel implements ActionListener, KeyListener {
 
     private void drawGameOver(Graphics g) {
 
+        //oyun bittiğinde çizilicek resim ve yazılar
         timer.stop();
+
         g.drawImage(roadImage, 0, 0, 600, 1000, this);
         g.drawImage(roadImage2, WIDTH / 2 - 8, 0, 15, HEIGHT, this);
+
         String message = "GAME OVER ";
         String message2 = "SKOR : " + skor / 1000;
         String message3 = "TIME : " + (int) time / 100.0;
@@ -142,10 +148,11 @@ public class Surface extends JPanel implements ActionListener, KeyListener {
         g.drawString(message2, this.WIDTH / 2 - 140, this.HEIGHT / 2);
         g.drawString(message3, this.WIDTH / 2 - 140, this.HEIGHT / 2 + 100);
 
-        //  System.exit(5000);
     }
 
     public void addOtherCars(boolean first) {
+
+        //karşıdan gelen arabalar bu metodla ekleniyor
         int positionx = rand.nextInt() % 2;
         int x = 0;
         int y = 0;
@@ -162,6 +169,8 @@ public class Surface extends JPanel implements ActionListener, KeyListener {
     }
 
     public void addLine(boolean first) {
+
+        //yol çizgileri bu metodla ekleniyor
         int x = WIDTH / 2 - 8;
         int y = line.size() * 200;
         if (first) {
@@ -182,11 +191,13 @@ public class Surface extends JPanel implements ActionListener, KeyListener {
         Rectangle rect;
         OtherCars oc;
 
+        //karşıdan gelen arabaların ilerlemesini sağlıyor
         for (int i = 0; i < otherCars.size(); i++) {
             oc = otherCars.get(i);
             oc.y += speed + 1;
         }
 
+        //karşıdan gelen arabalr ekran dışına çıkınca siliniyor 
         for (int i = 0; i < otherCars.size(); i++) {
             oc = otherCars.get(i);
             if (oc.y + oc.height > this.HEIGHT) {
@@ -195,10 +206,10 @@ public class Surface extends JPanel implements ActionListener, KeyListener {
             }
         }
 
+        //yol çizgilerinin ilerlemesini sağlıyor
         for (int i = 0; i < line.size(); i++) {
             rect = line.get(i);
             rect.y += speed;
-
         }
 
         for (int i = 0; i < line.size(); i++) {
@@ -211,6 +222,8 @@ public class Surface extends JPanel implements ActionListener, KeyListener {
     }
 
     public boolean control() {
+
+        //Bu metodda arabaların çarpışıp çarpışmadığı kontrol ediliyor
         Rectangle r;
         Rectangle r2;
         for (OtherCars oc : otherCars) {
@@ -224,6 +237,8 @@ public class Surface extends JPanel implements ActionListener, KeyListener {
     }
 
     public void moveleft() {
+
+        //Sol yön tuşuna basınca arabanın sola hareket etmesini sağlıyor
         if (raceCar.x - move < WIDTH / 2 - 150) {
             System.out.println("\b");
         } else {
@@ -232,6 +247,8 @@ public class Surface extends JPanel implements ActionListener, KeyListener {
     }
 
     public void moveright() {
+
+        //Sağ yön tuşuna basınca arabanın sağa hareket etmesini sağlıyor
         if (raceCar.x + move > WIDTH / 2 + 80) {
             System.out.println("\b");
         } else {
@@ -240,6 +257,8 @@ public class Surface extends JPanel implements ActionListener, KeyListener {
     }
 
     public void moveup() {
+
+        //Yukarı yön tuşuna basınca arabanın hızlanmasını sağlıyor
         if (speed > 10) {
             System.out.println("\b");
         } else {
@@ -248,6 +267,8 @@ public class Surface extends JPanel implements ActionListener, KeyListener {
     }
 
     public void movedown() {
+
+        //Aşağı yön tuşuna basınca arabanın yavaşlamasını sağlıyor
         if (speed < 2) {
             System.out.println("\b");
         } else {
